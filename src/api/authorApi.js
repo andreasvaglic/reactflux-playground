@@ -1,12 +1,12 @@
 "use strict";
 
 //This file is mocking a web API by hitting hard coded data.
-var authors = require('./authorData').authors;
-var _ = require('lodash');
+var authors = require("./authorData").authors;
+var _ = require("lodash");
 
 //This would be performed on the server in a real app. Just stubbing in.
 var _generateId = function (author) {
-    return author.firstName.toLowerCase() + '-' + author.lastName.toLowerCase();
+    return author.firstName.toLowerCase() + "-" + author.lastName.toLowerCase();
 };
 
 var _clone = function (item) {
@@ -25,7 +25,7 @@ var AuthorApi = {
 
     saveAuthor: function (author) {
         //pretend an ajax call to web api is made here
-        console.log('Pretend this just saved the author to the DB via AJAX call...');
+        console.log("Pretend this just saved the author to the DB via AJAX call...");
 
         if (author.id) {
             var existingAuthorIndex = _.indexOf(authors, _.find(authors, {id: author.id}));
@@ -42,7 +42,7 @@ var AuthorApi = {
     },
 
     deleteAuthor: function (id) {
-        console.log('Pretend this just deleted the author from the DB via an AJAX call...');
+        console.log("Pretend this just deleted the author from the DB via an AJAX call...");
         _.remove(authors, { id: id});
     }
 };
