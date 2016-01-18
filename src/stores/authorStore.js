@@ -39,7 +39,7 @@ var AuthorStore = assign({}, EventEmitter.prototype, {
     }
 });
 
-// This is a place where Flux's dispatcher implementation differs from traditional published subscribed patterns.
+// This is a place where Flux's dispatcher implementation differs from traditional publisher-subscriber patterns.
 // Every store that registers with the dispatcher is notified of every single action.
 Dispatcher.register(function (action) {
     switch (action.actionType) {

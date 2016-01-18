@@ -3,7 +3,8 @@
 var React = require("react");
 var Router = require("react-router");
 var AuthorForm = require("./authorForm");
-var AuthorApi = require("../../api/authorApi");
+var AuthorActions = require("../../actions/authorActions");
+var AuthorStore = require("../../stores/authorStore");
 var toastr = require("toastr");
 
 var ManageAuthorPage = React.createClass({
@@ -44,19 +45,19 @@ var ManageAuthorPage = React.createClass({
         // remember, this component is used both for adding and for editing authors
         if (authorId) {
             this.setState({
-                author: AuthorApi.getAuthorById(authorId)
+                author: AuthorStore.getAuthorById(authorId)
             });
         }
     },
 
     // Called for every key press
     setAuthorState: function (event) {
-        var field = event.target.name,
-            value = event.target.value;
-
         this.setState({
             dirty: true
         });
+        
+        var field = event.target.name,
+            value = event.target.value;
 
         this.state.author[field] = value;
 
@@ -95,7 +96,7 @@ var ManageAuthorPage = React.createClass({
         }
 
         // Save our author to our mock API
-        AuthorApi.saveAuthor(this.state.author);
+        AuthorActions.createAuthor(this.state.author);
         this.setState({
             dirty: false
         });
