@@ -1,0 +1,56 @@
+"use strict";
+
+var Dispatcher = require("../dispatcher/appDispatcher");
+var ActionTypes = require("../constants/actionTypes");
+// this is from node. every our store will use it. Use to broadcast events from out stores
+// so React components are notified when stores change
+var EventEmitter = require("events").EventEmitter;
+// Object-assign is used to simply glue two objects together (combines their properties). We will use it
+// to glue together our AuthorStore and the EventEmitter together
+// btw objectAssing is native in ES6
+var assign = require("Object-assign");
+var _ = require("lodash");
+var CHANGE_EVENT = "change";
+
+var _authors = [];
+
+var AuthorStore = assign({}, EventEmitter.prototype, {
+    // This here is a basic template for any Flux store
+
+    addChangeListener: function (callback) {
+        this.on(CHANGE_EVENT, callback);
+    },
+
+    removeChangeListener: function (callback) {
+        this.removeListener(CHANGE_EVENT, callback);
+    },
+
+    emitChange: function () {
+        this.emit(CHANGE_EVENT);
+    },
+
+    getAllAuthors: function () {
+        return _authors;
+    },
+
+    getAuthorById: function (id) {
+        // Using lodash's find function
+        return _.find(_authors, {id: id});
+    }
+});
+
+// This is a place where Flux's dispatcher implementation differs from traditional published subscribed patterns.
+// Every store that registers with the dispatcher is notified of every single action.
+Dispatcher.register(function (action) {
+    switch (action.actionType) {
+        case ActionTypes.CREATE_AUTHOR:
+            // action.author comes from the payload (see authorActions Dispatcher.dispatch)
+            // So author actions and this store are glued together with the dispatcher
+            _authors.push(action.author);
+            // By emitting this change, any React components that have registered with this store, will be notified
+            AuthorStore.emitChange();
+    }
+});
+
+// We are exporting the public API for our store
+module.exports = AuthorStore;
