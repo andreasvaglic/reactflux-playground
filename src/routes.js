@@ -13,6 +13,7 @@ var routes = (
         <DefaultRoute handler={require("./components/homePage")} />
         <Route name="authors" handler={require("./components/authors/authorPage")} />
         <Route name="addAuthor" path="author" handler={require("./components/authors/manageAuthorPage")} />
+        <Route name="manageAuthor" path="author/:id" handler={require("./components/authors/manageAuthorPage")} />
         <Route name="about" handler={require("./components/about/aboutPage")} />
         <NotFoundRoute handler={require("./components/notFoundPage")} />
         <Redirect from="about-us" to="about" />
@@ -20,5 +21,7 @@ var routes = (
         <Redirect from="about/*" to="about" />
     </Route>
 );
+
+// path="author/:id" -> id is a placeholder
 
 module.exports = routes;
