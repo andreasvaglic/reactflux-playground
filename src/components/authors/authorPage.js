@@ -4,7 +4,7 @@ var React = require("react");
 var Router = require("react-router");
 var Link = Router.Link;
 var AuthorStore = require("../../stores/authorStore");
-var AuthorActions = require("../../actions/AuthorActions");
+var AuthorActions = require("../../actions/authorActions");
 var AuthorList = require("./authorList");
 
 var AuthorPage = React.createClass({
@@ -12,6 +12,23 @@ var AuthorPage = React.createClass({
         return {
             authors: AuthorStore.getAllAuthors()
         };
+    },
+
+    // Anytime something changes, call onChange function
+    componentWillMount: function () {
+        AuthorStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function () {
+        AuthorStore.removeChangeListener(this._onChange);
+    },
+
+    // The fn that will run anytime the store changes
+    _onChange: function () {
+        debugger;
+        this.setState({
+            author: AuthorStore.getAllAuthors()
+        });
     },
     
     render: function () {

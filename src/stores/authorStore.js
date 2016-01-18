@@ -16,7 +16,6 @@ var _authors = [];
 
 var AuthorStore = assign({}, EventEmitter.prototype, {
     // This here is a basic template for any Flux store
-
     addChangeListener: function (callback) {
         this.on(CHANGE_EVENT, callback);
     },
@@ -43,12 +42,39 @@ var AuthorStore = assign({}, EventEmitter.prototype, {
 // Every store that registers with the dispatcher is notified of every single action.
 Dispatcher.register(function (action) {
     switch (action.actionType) {
+        case ActionTypes.INITIALIZE:
+            _authors = action.initialData.authors;
+            AuthorStore.emitChange();
+            break;
+
         case ActionTypes.CREATE_AUTHOR:
             // action.author comes from the payload (see authorActions Dispatcher.dispatch)
             // So author actions and this store are glued together with the dispatcher
             _authors.push(action.author);
             // By emitting this change, any React components that have registered with this store, will be notified
             AuthorStore.emitChange();
+            break;
+
+        // Replacing the existing author with a new author
+        case ActionTypes.UPDATE_AUTHOR:
+            var existingAuthor = _.find(_authors, {id: action.author.id}),
+                existingAuthorIndex = _.indexOf(_authors, existingAuthor);
+
+            _authors.splice(existingAuthorIndex, 1, action.author);
+            AuthorStore.emitChange();
+            break;
+
+        case ActionTypes.DELETE_AUTHOR:
+            debugger;
+            _.remove(_authors, function (author) {
+                return action.id === author.id;
+            });
+
+            AuthorStore.emitChange();
+            break;
+
+        default:
+        // no op
     }
 });
 
